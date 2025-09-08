@@ -13,3 +13,16 @@ def tabla():
             stock INTEGER NOT NULL
             );''')
     baseDeDatos.commit()
+
+def rellenarTabla (elementos):
+    baseDeDatos = connect("tienda.db")
+    cr = baseDeDatos.cursor()
+    cr.execute('''SELECT * FROM elementos''')
+    datos = cr.fetchall()
+    for dato in datos:
+        elementos.insert("", "end", values=dato)
+
+def limpiar_tabla(elementos):
+    for item in elementos.get_children():
+        elementos.delete(item)
+
