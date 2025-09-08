@@ -26,6 +26,16 @@ def limpiar_tabla(table):
     for item in table.get_children():
         table.delete(item)
 
+def ingresar():
+    nnombre = nombre.get()
+    nprecio = precio.get()
+    nstock = stock.get()
+
+    cr.execute('''
+                    INSERT INTO elementos(nombre, precio, stock)
+                    VALUES(?,?,?)''', (nnombre, nprecio, nstock))
+    baseDeDatos.commit()
+
 app = Tk()
 app.title("Tienda")
 
@@ -42,7 +52,18 @@ for col in table ["columns"]:
 table.pack()
 
 rellenarTabla(table)
-table.after(2000, lambda: limpiar_tabla(table))
+table.after(10000, lambda: limpiar_tabla(table))
+
+nombre = Entry(app)
+precio = Entry(app)
+stock = Entry(app)
+
+bingresar = Button(app, text="Ingresar", command=ingresar)
+
+nombre.pack()
+precio.pack()
+stock.pack()
+bingresar.pack()
 
 #Se inicia el bucle principal
 app.mainloop()
