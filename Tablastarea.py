@@ -19,7 +19,7 @@ def tabla():
 def cerrarprin():
     app.destroy()
 
-def rellenarTabla (table):
+def rellenarTabla ():
     baseDeDatos = connect("tienda.db")
     cr = baseDeDatos.cursor()
     cr.execute('''SELECT * FROM elementos''')
@@ -27,9 +27,13 @@ def rellenarTabla (table):
     for dato in datos:
         table.insert("", "end", values=dato)
 
-def limpiar_tabla(table):
+def limpiar_tabla():
     for item in table.get_children():
         table.delete(item)
+    cr.execute('SELECT * FROM elementos')
+    productos = cr.fetchall()
+    for producto in productos:
+        table.insert("", "end", values=producto)
 
 def datosingresar ():
     def cerrar():
@@ -50,7 +54,7 @@ def datosingresar ():
                         INSERT INTO elementos(nombre, precio, stock)
                         VALUES(?,?,?)''', (nnombre, nprecio, nstock))
         baseDeDatos.commit()
-        messagebox.showinfo("Accion exitosa", "El producto fue agregado con exito")
+        messagebox.showinfo("Éxito", "El producto se agregó con éxito")
         limpiar_tabla()
         ventAgregar.destroy()
 
@@ -74,6 +78,30 @@ def datosingresar ():
     cerr.grid(row=3, column=0, pady=5, padx=5)
     agre.grid(row=3, column=1, pady=5, padx=5)
 
+def Eliminarprin():
+    def eliminar ():
+        idp = ID.get()  # se guarda el numero ingresado por el usuario
+        ID.delete(0, END)
+        cr.execute('DELETE FROM elementos WHERE id = ?', (idp,))  # se elimina la palabra en base al ID
+        baseDeDatos.commit()  # GUARDA LOS Cambios en la base de datos
+        messagebox.showinfo("Éxito",
+                            f"El producto {idp} se eliminó bien")  # muestra un mensaje una vez se eliminó la palabra
+        limpiar_tabla()
+        ventEliminar.destroy()
+
+    ventEliminar =CTkToplevel(app)
+    ventEliminar.title("Eliminar Producto")
+    ventEliminar.grab_set()
+
+    idel = CTkLabel(ventEliminar, text="ID del producto")
+    ID = CTkEntry(ventEliminar)
+
+    botonElim = CTkButton(ventEliminar, text="Eliminar", command=eliminar)
+
+    idel.grid(row=0, column=0, pady=5, padx=5)
+    ID.grid(row=1, column=0,  pady=5, padx=5)
+    botonElim.grid(row=2, column=0, pady=5, padx=5)
+
 app = Tk()
 app.title("Tienda")
 
@@ -89,12 +117,11 @@ for col in table ["columns"]:
 
 table.grid(row=0, column=0, columnspan=3, pady=5, padx=5)
 
-rellenarTabla(table)
-table.after(10000, lambda: limpiar_tabla(table))
+rellenarTabla()
 
 ingres = CTkButton(app, text="Agregar",command=datosingresar)
 clos = CTkButton(app, text="Salir", command= cerrarprin)
-elimin = CTkButton(app, text="Eliminar")
+elimin = CTkButton(app, text="Eliminar", command=Eliminarprin)
 
 ingres.grid(row=9, column=0, pady=5, padx=5)
 clos.grid(row=9, column=1, pady=5, padx=5)
