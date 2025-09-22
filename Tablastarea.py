@@ -80,12 +80,11 @@ def datosingresar ():
 
 def Eliminarprin():
     def eliminar ():
-        idp = ID.get()  # se guarda el numero ingresado por el usuario
+        idp = ID.get() 
         ID.delete(0, END)
-        cr.execute('DELETE FROM elementos WHERE id = ?', (idp,))  # se elimina la palabra en base al ID
-        baseDeDatos.commit()  # GUARDA LOS Cambios en la base de datos
-        messagebox.showinfo("Éxito",
-                            f"El producto {idp} se eliminó bien")  # muestra un mensaje una vez se eliminó la palabra
+        cr.execute('DELETE FROM elementos WHERE id = ?', (idp,)) 
+        baseDeDatos.commit()  
+        messagebox.showinfo("Éxito",  f"El producto {idp} se eliminó bien")  
         limpiar_tabla()
         ventEliminar.destroy()
 
